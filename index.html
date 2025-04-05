@@ -1,8 +1,9 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Anime List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
@@ -12,116 +13,122 @@
       background-attachment: fixed;
       padding: 20px;
       color: #fff;
-    }.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+    }
 
-.header img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-}
+    .header img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-.add-button {
-  margin-left: auto;
-  font-size: 36px;
-  cursor: pointer;
-  background: #00ff88;
-  padding: 8px 16px;
-  border-radius: 12px;
-  color: #000;
-}
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
 
-.search-bar, .filter-bar {
-  margin-bottom: 15px;
-}
+    .add-button {
+      margin-left: auto;
+      font-size: 28px;
+      cursor: pointer;
+      background: #00ff88;
+      padding: 8px 16px;
+      border-radius: 10px;
+      color: #000;
+    }
 
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 8px;
-  border: none;
-}
+    .search-bar {
+      margin-bottom: 15px;
+    }
 
-.anime-list {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
 
-.anime-card {
-  display: flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 12px;
-  padding: 12px;
-  gap: 12px;
-}
+    .anime-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
 
-.anime-card img {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  object-fit: cover;
-}
+    .anime-card {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      padding: 10px;
+      gap: 10px;
+    }
 
-.anime-info {
-  flex: 1;
-}
+    .anime-card img {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
 
-.status-button {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  color: #fff;
-  font-weight: bold;
-}
+    .anime-info {
+      flex: 1;
+    }
 
-.status-selesai { background-color: green; }
-.status-stop { background-color: red; }
-.status-ongoing { background-color: orange; }
+    .status-button {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+    }
 
-#formModal {
-  position: fixed;
-  background: rgba(0,0,0,0.85);
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  display: none;
-}
+    .status-selesai { background-color: green; }
+    .status-stop { background-color: red; }
+    .status-ongoing { background-color: orange; }
 
-.form-container {
-  background: #222;
-  padding: 24px;
-  border-radius: 12px;
-  width: 320px;
-  color: #fff;
-}
+    #formModal {
+      position: fixed;
+      background: rgba(0,0,0,0.8);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
 
-.form-container button {
-  margin-top: 12px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    .form-container {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: #fff;
+    }
 
-.rating {
-  font-size: 16px;
-}
+    .form-container input,
+    .form-container select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+    }
 
+    .form-container button {
+      margin-top: 5px;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 48%;
+    }
   </style>
 </head>
 <body>
@@ -129,45 +136,32 @@ input, select {
     <img src="https://deposit.pictures/media/images/41/72/a2/4172a2a29c444cb1a06f3a19d7c832c0.jpg" alt="Profile">
     <h1>Anime List</h1>
     <div class="add-button" onclick="showForm()">+</div>
-  </div>  <div class="search-bar">
+  </div>
+
+  <div class="search-bar">
     <input type="text" id="searchInput" placeholder="Cari anime..." oninput="renderAnime()">
   </div>
-  <div class="filter-bar">
-    <select id="filterStatus" onchange="renderAnime()">
-      <option value="">Semua Status</option>
-      <option value="Selesai">Selesai</option>
-      <option value="Stop">Stop</option>
-      <option value="On Going">On Going</option>
-    </select>
-    <select id="filterRating" onchange="renderAnime()">
-      <option value="">Semua Rating</option>
-      <option value="5">5</option>
-      <option value="4">4</option>
-      <option value="3">3</option>
-      <option value="2">2</option>
-      <option value="1">1</option>
-    </select>
-  </div>  <div class="anime-list" id="animeList"></div>  <!-- Modal Form -->  <div id="formModal">
+
+  <div class="anime-list" id="animeList"></div>
+
+  <!-- Form Modal -->
+  <div id="formModal">
     <div class="form-container">
       <input type="text" id="judul" placeholder="Judul Anime">
       <input type="text" id="gambar" placeholder="Link Gambar">
-      <select id="status" onchange="toggleEpisodeField()">
+      <select id="status">
         <option value="Selesai">Selesai</option>
         <option value="Stop">Stop</option>
         <option value="On Going">On Going</option>
       </select>
-      <input type="number" id="episode" placeholder="Episode Terakhir" style="display:none">
-      <select id="rating">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-      <button onclick="submitAnime()">Simpan</button>
-      <button onclick="closeForm()">Tutup</button>
+      <div style="display: flex; justify-content: space-between;">
+        <button onclick="submitAnime()">Simpan</button>
+        <button onclick="closeForm()">Tutup</button>
+      </div>
     </div>
-  </div>  <script type="module">
+  </div>
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
@@ -184,103 +178,101 @@ input, select {
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    let animeData = {};
     let editKey = null;
+    let animeData = {};
 
-    const listRef = ref(db, "anime");
-    onValue(listRef, snapshot => {
-      animeData = snapshot.val() || {};
-      renderAnime();
-    });
-
-    window.showForm = (key = null) => {
+    function showForm(key = null) {
       editKey = key;
       if (key) {
         const anime = animeData[key];
-        judul.value = anime.judul;
-        gambar.value = anime.gambar;
-        status.value = anime.status;
-        rating.value = anime.rating || 1;
-        episode.value = anime.episode || "";
-        toggleEpisodeField();
+        document.getElementById("judul").value = anime.judul;
+        document.getElementById("gambar").value = anime.gambar;
+        document.getElementById("status").value = anime.status;
       } else {
-        judul.value = "";
-        gambar.value = "";
-        status.value = "Selesai";
-        rating.value = 1;
-        episode.value = "";
-        episode.style.display = "none";
+        document.getElementById("judul").value = "";
+        document.getElementById("gambar").value = "";
+        document.getElementById("status").value = "Selesai";
       }
-      formModal.style.display = "flex";
+      document.getElementById("formModal").style.display = "flex";
     }
 
-    window.closeForm = () => formModal.style.display = "none";
-
-    window.toggleEpisodeField = () => {
-      episode.style.display = status.value === "On Going" ? "block" : "none";
+    function closeForm() {
+      document.getElementById("formModal").style.display = "none";
     }
 
-    window.submitAnime = () => {
-      const data = {
-        judul: judul.value,
-        gambar: gambar.value,
-        status: status.value,
-        episode: status.value === "On Going" ? episode.value : "",
-        rating: parseInt(rating.value)
-      };
-      if (!data.judul || !data.gambar) return alert("Lengkapi data!");
+    function submitAnime() {
+      const judul = document.getElementById("judul").value;
+      const gambar = document.getElementById("gambar").value;
+      const status = document.getElementById("status").value;
 
-      if (editKey) set(ref(db, "anime/" + editKey), data);
-      else set(push(ref(db, "anime")), data);
+      if (!judul || !gambar) return alert("Isi semua data");
+
+      const data = { judul, gambar, status };
+
+      if (editKey) {
+        set(ref(db, "anime/" + editKey), data);
+      } else {
+        const listRef = ref(db, "anime");
+        const newRef = push(listRef);
+        set(newRef, data);
+      }
 
       closeForm();
     }
 
-    window.renderAnime = () => {
-      const list = document.getElementById("animeList");
+    const listRef = ref(db, "anime");
+    onValue(listRef, (snapshot) => {
+      animeData = snapshot.val() || {};
+      renderAnime();
+    });
+
+    function renderAnime() {
       const keyword = document.getElementById("searchInput").value.toLowerCase();
-      const fStatus = document.getElementById("filterStatus").value;
-      const fRating = document.getElementById("filterRating").value;
+      const container = document.getElementById("animeList");
+      container.innerHTML = "";
 
-      list.innerHTML = "";
-      const sorted = Object.entries(animeData).filter(([_, a]) => {
-        const matchSearch = a.judul.toLowerCase().includes(keyword);
-        const matchStatus = !fStatus || a.status === fStatus;
-        const matchRating = !fRating || a.rating == fRating;
-        return matchSearch && matchStatus && matchRating;
-      }).sort((a, b) => {
-        if (a[1].judul < b[1].judul) return -1;
-        if (a[1].judul > b[1].judul) return 1;
-        return b[1].rating - a[1].rating;
+      Object.entries(animeData).forEach(([key, anime]) => {
+        if (anime.judul.toLowerCase().includes(keyword)) {
+          const card = document.createElement("div");
+          card.className = "anime-card";
+
+          const img = document.createElement("img");
+          img.src = anime.gambar;
+
+          const info = document.createElement("div");
+          info.className = "anime-info";
+          info.innerHTML = `<strong>${anime.judul}</strong>`;
+
+          const statusBtn = document.createElement("button");
+          statusBtn.className = "status-button";
+          if (anime.status === "Selesai") statusBtn.classList.add("status-selesai");
+          if (anime.status === "Stop") statusBtn.classList.add("status-stop");
+          if (anime.status === "On Going") statusBtn.classList.add("status-ongoing");
+          statusBtn.innerText = anime.status;
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.onclick = () => showForm(key);
+
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "Hapus";
+          delBtn.onclick = () => remove(ref(db, "anime/" + key));
+
+          card.appendChild(img);
+          card.appendChild(info);
+          card.appendChild(statusBtn);
+          card.appendChild(editBtn);
+          card.appendChild(delBtn);
+
+          container.appendChild(card);
+        }
       });
-
-      for (const [key, anime] of sorted) {
-        const card = document.createElement("div");
-        card.className = "anime-card";
-
-        const img = document.createElement("img");
-        img.src = anime.gambar;
-
-        const info = document.createElement("div");
-        info.className = "anime-info";
-        info.innerHTML = `<strong>${anime.judul}</strong><br><span class='rating'>Rating: ${anime.rating || 1}${anime.episode ? ` | Ep: ${anime.episode}` : ""}</span>`;
-
-        const statusBtn = document.createElement("button");
-        statusBtn.className = "status-button";
-        statusBtn.classList.add(`status-${anime.status.replace(" ", "").toLowerCase()}`);
-        statusBtn.textContent = anime.status;
-
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
-        editBtn.onclick = () => showForm(key);
-
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "Hapus";
-        delBtn.onclick = () => remove(ref(db, "anime/" + key));
-
-        card.append(img, info, statusBtn, editBtn, delBtn);
-        list.appendChild(card);
-      }
     }
-  </script></body>
-  </html>
+
+    // agar bisa dipanggil dari HTML onclick
+    window.showForm = showForm;
+    window.closeForm = closeForm;
+    window.submitAnime = submitAnime;
+  </script>
+</body>
+      </html>
