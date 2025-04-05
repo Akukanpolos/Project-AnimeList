@@ -150,7 +150,6 @@
   </div>
 
   <script type="module">
-    // Firebase config
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
@@ -168,6 +167,7 @@
     const db = getDatabase(app);
 
     let editKey = null;
+    let animeData = {};
 
     function showForm(key = null) {
       editKey = key;
@@ -208,7 +208,6 @@
       closeForm();
     }
 
-    let animeData = {};
     const listRef = ref(db, "anime");
     onValue(listRef, (snapshot) => {
       animeData = snapshot.val() || {};
@@ -257,6 +256,12 @@
         }
       });
     }
+
+    // agar bisa dipanggil dari HTML (onclick)
+    window.showForm = showForm;
+    window.closeForm = closeForm;
+    window.submitAnime = submitAnime;
+    window.renderAnime = renderAnime;
   </script>
 </body>
-</html>
+  </html>
