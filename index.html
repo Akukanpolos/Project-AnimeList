@@ -23,8 +23,8 @@
       gap: 10px;
     }
     .profile img {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
     }
     .profile-info {
@@ -51,6 +51,7 @@
       background: #1e1e1e;
       padding: 10px;
       border-radius: 10px;
+      position: relative;
     }
     .form-container input {
       padding: 6px;
@@ -71,6 +72,7 @@
     .red { background: red; }
     .yellow { background: yellow; }
     .green { background: limegreen; }
+    .gray { background: gray; }
     .anime-list {
       margin-top: 15px;
       display: flex;
@@ -86,8 +88,8 @@
       align-items: center;
     }
     .anime-card img {
-      width: 70px;
-      height: 100px;
+      width: 100px;
+      height: 140px;
       object-fit: cover;
       border-radius: 6px;
     }
@@ -95,16 +97,33 @@
       flex: 1;
     }
     .anime-info strong {
-      font-size: 16px;
+      font-size: 18px;
+    }
+    .anime-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
     .anime-actions button {
-      margin-left: 5px;
       background: #444;
       color: white;
       border: none;
       padding: 4px 8px;
       border-radius: 6px;
       cursor: pointer;
+    }
+    .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: #333;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result-list {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -123,11 +142,16 @@
     </div>
   </div>
 
+  <!-- Form Search -->
   <div id="searchForm" class="form-container">
-    <input type="text" id="searchInput" placeholder="Cari judul..." oninput="renderAnime()">
+    <button class="close-btn" onclick="toggleForm('close')">X</button>
+    <input type="text" id="searchInput" placeholder="Cari judul..." oninput="renderSearchResult()">
+    <div class="anime-list result-list" id="searchResults"></div>
   </div>
 
+  <!-- Form Tambah -->
   <div id="addForm" class="form-container">
+    <button class="close-btn" onclick="toggleForm('close')">X</button>
     <input type="text" id="judul" placeholder="Judul Anime">
     <input type="number" id="episode" placeholder="Episode Terakhir">
     <input type="text" id="gambar" placeholder="Link Gambar">
@@ -144,7 +168,6 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyD0PPwtn6OTT1LP73TlJWfW_iSTVsYxIXw",
@@ -165,33 +188,26 @@
     function toggleForm(type) {
       document.getElementById("searchForm").style.display = type === 'search' ? 'flex' : 'none';
       document.getElementById("addForm").style.display = type === 'add' ? 'flex' : 'none';
+      if (type === 'close') {
+        document.getElementById("searchForm").style.display = 'none';
+        document.getElementById("addForm").style.display = 'none';
+      }
     }
 
     function setStatus(status) {
       selectedStatus = status;
     }
 
-    function clearForms() {
-      document.getElementById("judul").value = "";
-      document.getElementById("episode").value = "";
-      document.getElementById("gambar").value = "";
-      document.getElementById("searchInput").value = "";
-      selectedStatus = "";
-      toggleForm("none");
-    }
-
     function submitAnime() {
       const judul = document.getElementById("judul").value;
       const episode = document.getElementById("episode").value;
       const gambar = document.getElementById("gambar").value;
-
       if (!judul || !episode || !gambar || !selectedStatus) {
         alert("Lengkapi semua field!");
         return;
       }
 
       const data = { judul, episode, gambar, status: selectedStatus };
-
       if (editKey) {
         db.ref("anime/" + editKey).set(data);
         editKey = null;
@@ -199,13 +215,15 @@
         db.ref("anime").push(data);
       }
 
-      clearForms();
+      document.getElementById("judul").value = "";
+      document.getElementById("episode").value = "";
+      document.getElementById("gambar").value = "";
+      selectedStatus = "";
+      toggleForm("close");
     }
 
     function renderAnime() {
       const container = document.getElementById("animeList");
-      const searchKeyword = (document.getElementById("searchInput")?.value || "").toLowerCase();
-
       db.ref("anime").once("value", (snapshot) => {
         const data = snapshot.val();
         container.innerHTML = "";
@@ -213,54 +231,71 @@
 
         for (const key in data) {
           const anime = data[key];
-          if (!anime.judul.toLowerCase().includes(searchKeyword)) continue;
           count++;
-
-          const card = document.createElement("div");
-          card.className = "anime-card";
-
-          const img = document.createElement("img");
-          img.src = anime.gambar;
-
-          const info = document.createElement("div");
-          info.className = "anime-info";
-          info.innerHTML = `<strong>${anime.judul}</strong><br>Episode: ${anime.episode}`;
-
-          const statusColor = anime.status === "Selesai" ? "green" : anime.status === "On Going" ? "yellow" : "red";
-          const statusDot = document.createElement("div");
-          statusDot.className = `status-btn ${statusColor}`;
-          statusDot.style.marginTop = "5px";
-
-          const actions = document.createElement("div");
-          actions.className = "anime-actions";
-          const editBtn = document.createElement("button");
-          editBtn.textContent = "Edit";
-          editBtn.onclick = () => {
-            document.getElementById("judul").value = anime.judul;
-            document.getElementById("episode").value = anime.episode;
-            document.getElementById("gambar").value = anime.gambar;
-            selectedStatus = anime.status;
-            toggleForm("add");
-            editKey = key;
-          };
-
-          const delBtn = document.createElement("button");
-          delBtn.textContent = "Hapus";
-          delBtn.onclick = () => db.ref("anime/" + key).remove();
-
-          actions.appendChild(editBtn);
-          actions.appendChild(delBtn);
-
-          card.appendChild(img);
-          card.appendChild(info);
-          card.appendChild(statusDot);
-          card.appendChild(actions);
-
-          container.appendChild(card);
+          container.appendChild(createAnimeCard(anime, key));
         }
 
         const level = Math.floor(count / 50) + 1;
         document.getElementById("level").textContent = level;
+      });
+    }
+
+    function createAnimeCard(anime, key) {
+      const card = document.createElement("div");
+      card.className = "anime-card";
+
+      const img = document.createElement("img");
+      img.src = anime.gambar;
+
+      const info = document.createElement("div");
+      info.className = "anime-info";
+      info.innerHTML = `<strong>${anime.judul}</strong><br>Episode: ${anime.episode}`;
+
+      const statusColor = anime.status === "Selesai" ? "green" :
+                          anime.status === "On Going" ? "yellow" :
+                          anime.status === "Stop" ? "red" : "gray";
+      const statusDot = document.createElement("div");
+      statusDot.className = `status-btn ${statusColor}`;
+
+      const actions = document.createElement("div");
+      actions.className = "anime-actions";
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.onclick = () => {
+        document.getElementById("judul").value = anime.judul;
+        document.getElementById("episode").value = anime.episode;
+        document.getElementById("gambar").value = anime.gambar;
+        selectedStatus = anime.status;
+        toggleForm("add");
+        editKey = key;
+      };
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Hapus";
+      delBtn.onclick = () => db.ref("anime/" + key).remove();
+
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+
+      card.appendChild(img);
+      card.appendChild(info);
+      card.appendChild(statusDot);
+      card.appendChild(actions);
+      return card;
+    }
+
+    function renderSearchResult() {
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+      const resultContainer = document.getElementById("searchResults");
+      db.ref("anime").once("value", (snapshot) => {
+        const data = snapshot.val();
+        resultContainer.innerHTML = "";
+        for (const key in data) {
+          const anime = data[key];
+          if (anime.judul.toLowerCase().includes(keyword)) {
+            resultContainer.appendChild(createAnimeCard(anime, key));
+          }
+        }
       });
     }
 
