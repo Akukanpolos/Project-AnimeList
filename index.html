@@ -124,7 +124,7 @@
   </div>
 
   <div id="searchForm" class="form-container">
-    <input type="text" id="searchInput" placeholder="Cari judul..." oninput="handleSearch()">
+    <input type="text" id="searchInput" placeholder="Cari judul..." oninput="renderAnime()">
   </div>
 
   <div id="addForm" class="form-container">
@@ -146,15 +146,14 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // Firebase config dari project kamu
     const firebaseConfig = {
-      apiKey: "AIzaSyALaTxq2sfXDB8AkgNF4BylmC5nE3nvLT0",
-      authDomain: "anime-list.firebaseapp.com",
-      databaseURL: "https://anime-list-default-rtdb.firebaseio.com",
-      projectId: "anime-list",
-      storageBucket: "anime-list.appspot.com",
-      messagingSenderId: "44646224970",
-      appId: "1:44646224970:web:9f303dfcbdd39c174e76e1"
+      apiKey: "AIzaSyD0PPwtn6OTT1LP73TlJWfW_iSTVsYxIXw",
+      authDomain: "listanime-98354.firebaseapp.com",
+      databaseURL: "https://listanime-98354-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "listanime-98354",
+      storageBucket: "listanime-98354.appspot.com",
+      messagingSenderId: "104733537173",
+      appId: "1:104733537173:web:ed59494b1ee2e2aaed3c9c"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -170,6 +169,15 @@
 
     function setStatus(status) {
       selectedStatus = status;
+    }
+
+    function clearForms() {
+      document.getElementById("judul").value = "";
+      document.getElementById("episode").value = "";
+      document.getElementById("gambar").value = "";
+      document.getElementById("searchInput").value = "";
+      selectedStatus = "";
+      toggleForm("none");
     }
 
     function submitAnime() {
@@ -191,25 +199,13 @@
         db.ref("anime").push(data);
       }
 
-      // Reset form & tutup menu
-      document.getElementById("judul").value = "";
-      document.getElementById("episode").value = "";
-      document.getElementById("gambar").value = "";
-      selectedStatus = "";
-      document.getElementById("addForm").style.display = "none";
-    }
-
-    function handleSearch() {
-      renderAnime();
-      const searchVal = document.getElementById("searchInput").value;
-      if (searchVal === "") {
-        document.getElementById("searchForm").style.display = "none";
-      }
+      clearForms();
     }
 
     function renderAnime() {
       const container = document.getElementById("animeList");
       const searchKeyword = (document.getElementById("searchInput")?.value || "").toLowerCase();
+
       db.ref("anime").once("value", (snapshot) => {
         const data = snapshot.val();
         container.innerHTML = "";
@@ -230,7 +226,7 @@
           info.className = "anime-info";
           info.innerHTML = `<strong>${anime.judul}</strong><br>Episode: ${anime.episode}`;
 
-          const statusColor = anime.status === "Selesai" ? "yellow" : anime.status === "On Going" ? "green" : "red";
+          const statusColor = anime.status === "Selesai" ? "green" : anime.status === "On Going" ? "yellow" : "red";
           const statusDot = document.createElement("div");
           statusDot.className = `status-btn ${statusColor}`;
           statusDot.style.marginTop = "5px";
@@ -271,4 +267,4 @@
     db.ref("anime").on("value", renderAnime);
   </script>
 </body>
-      </html>
+</html>
